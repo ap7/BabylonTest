@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion config.android.compileSdk
+    defaultConfig {
+        applicationId app.applicationId
+        minSdkVersion config.android.minSdk
+        targetSdkVersion config.android.targetSdk
+        versionCode app.versionCode
+        versionName app.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility config.java
+        targetCompatibility config.java
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$config.kotlin"
+
+    //UI
+    implementation "androidx.appcompat:appcompat:$lib.ui.appcompat"
+    implementation "androidx.recyclerview:recyclerview:$lib.ui.recyclerview"
+    implementation "com.google.android.material:material:$lib.ui.material"
+    implementation "androidx.constraintlayout:constraintlayout:$lib.ui.constraint"
+
+    //Network - Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$lib.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$lib.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$lib.retrofit"
+
+    //Pattern - Rx
+    implementation "io.reactivex.rxjava2:rxjava:$lib.rxjava"
+    implementation "io.reactivex.rxjava2:rxandroid:$lib.rxandroid"
+
+    //Injection - Koin
+    implementation "org.koin:koin-android:$lib.koin"
+
+    //Logging - Timber
+    implementation "com.jakewharton.timber:timber:$lib.timber"
+
+    //Test
+    testImplementation "androidx.test.ext:junit:$lib.test.junit"
+    testImplementation "io.mockk:mockk:$lib.test.mockk"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$lib.test.espresso"
+    androidTestImplementation "io.mockk:mockk-android:$lib.test.mockk"
+
+}
