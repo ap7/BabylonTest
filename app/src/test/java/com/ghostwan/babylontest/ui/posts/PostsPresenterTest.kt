@@ -9,6 +9,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.Assert.*
 
 /**
  * Unit tests for the implementation of {@link PostsPresenter}
@@ -33,7 +34,7 @@ class PostsPresenterTest {
     }
 
     @Test
-    fun loadPosts_when_subscribe(){
+    fun `load post list when subscribe`(){
         //Create an empty list
         every { repository.getPosts() } returns Single.just(listOf())
 
@@ -46,7 +47,7 @@ class PostsPresenterTest {
     }
 
     @Test
-    fun displayEmptyList_when_postListIsEmpty() {
+    fun `display empty list indicator when post list is empty`() {
         //Create an empty list
         every { repository.getPosts() } returns Single.just(listOf())
 
@@ -56,22 +57,16 @@ class PostsPresenterTest {
         //Check if the loading indicator is displayed,
         // if the empty list is displayed,
         // then if the indicator is hide
-        verifyOrder {
+        verifySequence {
             view.showLoadingIndicator()
             view.showEmptyList()
             view.hideLoadingIndicator()
         }
 
-        //Verify that those methods weren't called
-        verify(inverse = true) {
-            view.showError(Throwable())
-            view.showPosts(any())
-        }
-
     }
 
     @Test
-    fun displayPosts_when_postsAvailable() {
+    fun `display post list when post are available`() {
         //Create a list with a post
         val mockPosts = listOf(mockPost)
         every { repository.getPosts() } returns Single.just(mockPosts)
@@ -79,19 +74,29 @@ class PostsPresenterTest {
         //Load the posts from the repository
         presenter.loadPosts()
 
+        val capturedList = slot<List<Post>>()
+
         //Check if the loading indicator is displayed,
         // if the post is displayed,
         // then if the indicator is hide
-        verifyOrder {
+        verifySequence {
             view.showLoadingIndicator()
-            view.showPosts(mockPosts)
+            view.showPosts(capture(capturedList))
             view.hideLoadingIndicator()
         }
+
+        //Test if capture post is coherent
+        assertTrue(capturedList.captured.isNotEmpty())
+        val capturedPost = capturedList.captured[0]
+        assertEquals(capturedPost.id , mockPost.id)
+        assertEquals(capturedPost.user , mockPost.user)
+        assertEquals(capturedPost.title , mockPost.title)
+        assertEquals(capturedPost.body, mockPost.body)
     }
 
 
     @Test
-    fun displayError_when_exceptionHappens() {
+    fun `display error when exception occurs`() {
         //Return a single with an exception
         val exception = Exception()
         every { repository.getPosts() } returns Single.error(exception)
@@ -102,22 +107,26 @@ class PostsPresenterTest {
         //Check if the loading indicator is displayed,
         // if the empty list is displayed and the error message
         // then if the indicator is hide
-        verifyAll {
+        verifySequence {
             view.showLoadingIndicator()
-            view.showError(exception)
             view.showEmptyList()
+            view.showError(exception)
             view.hideLoadingIndicator()
         }
     }
 
     @Test
-    fun showPostDetail_when_clickingOnPost() {
+    fun `show post detail when clicking on post`() {
         //Open post detail
         presenter.openPostDetails(mockPost)
 
+        val capturedPost = slot<Post>()
+
         verify {
-            view.showPostDetail(mockPost)
+            view.showPostDetail(capture(capturedPost))
         }
+        //Test if capture post is coherent
+        assertEquals(capturedPost.captured.id, mockPost.id)
     }
 
     @After

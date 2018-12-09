@@ -11,6 +11,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.Assert.*
 
 /**
  * Unit tests for the implementation of {@link PostDetailPresenter}
@@ -46,7 +47,7 @@ class PostDetailPresenterTest {
     }
 
     @Test
-    fun loadPostInfo_when_subscribe(){
+    fun `load post info when subscribe`(){
         //Create a mock repository
         createMockRepository()
 
@@ -60,19 +61,23 @@ class PostDetailPresenterTest {
     }
 
     @Test
-    fun displayPostInfo_when_postAvailable(){
+    fun `display post info when post exist`(){
         //Create a mock repository
         val (post, user, comment) = createMockRepository()
 
         //load post information
         presenter.loadPostInfo(1)
 
+        val capturedPost = slot<Post>()
+        val capturedUser = slot<User>()
+        val capturedComments = slot<List<Comment>>()
+
         //Verify if the loading indicator is displayed
         verifyAll {
             view.showLoadingIndicator()
-            view.showPostInfo(post)
-            view.showUserInfo(user)
-            view.showComments(listOf(comment))
+            view.showPostInfo(capture(capturedPost))
+            view.showUserInfo(capture(capturedUser))
+            view.showComments(capture(capturedComments))
             view.hideLoadingIndicator()
         }
 
@@ -80,24 +85,41 @@ class PostDetailPresenterTest {
         verify(inverse = true) {
             view.showError(any())
         }
+
+        //Test if captured post is coherent
+        assertEquals(capturedPost.captured.id, post.id)
+        assertEquals(capturedPost.captured.title, post.title)
+        assertEquals(capturedPost.captured.body, post.body)
+        assertEquals(capturedPost.captured.user, post.user)
+
+        //Test if one comment was retrieved
+        assertTrue(capturedComments.captured.size == 1)
+
+        //Test if captured user ID is the same than post user ID
+        assertEquals(capturedUser.captured.id, post.user)
+
+        //Test user data
+        assertEquals(capturedUser.captured.username, user.username)
+
+        //Test comment data
+        assertEquals(capturedComments.captured[0].name, comment.name)
     }
 
     @Test
-    fun displayError_when_postDetailUnavailable() {
+    fun `display error when exception occurs`() {
+        //Return a single with an exception
         val exception = Exception()
-        every { repository.getPost(1) } returns Single.error(exception)
+        every { repository.getPost(any()) } returns Single.error(exception)
+        every { repository.getPostComments(any()) } returns Single.error(exception)
 
-        //        verifyOrder {
-//            view.showLoadingIndicator()
-//            view.showError(exception)
-//            view.hideLoadingIndicator()
-//        }
+        //load post information
+        presenter.loadPostInfo(1)
 
-        //Verify that those function are not called
-        verify(inverse = true) {
-            view.showPostInfo(any())
-            view.showUserInfo(any())
-            view.showComments(any())
+        //Verify that an error message is displayed
+        verifySequence {
+            view.showLoadingIndicator()
+            view.showError(exception)
+            view.hideLoadingIndicator()
         }
 
     }
