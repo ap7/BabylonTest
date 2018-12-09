@@ -74,7 +74,6 @@ class PostsActivity : AppCompatActivity(), PostsContract.View {
     }
 
     override fun showError(throwable: Throwable) {
-        showEmptyList()
         handleError(applicationContext, swipeView, throwable)
     }
 

@@ -2,11 +2,13 @@ package com.ghostwan.babylontest.ui.posts
 
 import com.ghostwan.babylontest.data.model.Post
 import com.ghostwan.babylontest.data.source.PostsDataSource
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.ghostwan.babylontest.ui.util.BaseSchedulerProvider
+import com.ghostwan.babylontest.ui.util.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
-class PostsPresenter(private val repository: PostsDataSource, private val view: PostsContract.View) : PostsContract.Presenter {
+class PostsPresenter(private val repository: PostsDataSource,
+                     private val view: PostsContract.View,
+                     private val scheduler: BaseSchedulerProvider = SchedulerProvider()) : PostsContract.Presenter {
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
@@ -18,15 +20,18 @@ class PostsPresenter(private val repository: PostsDataSource, private val view: 
         compositeDisposable.clear()
         view.showLoadingIndicator()
         val disposable = repository.getPosts()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(scheduler.io())
+            .observeOn(scheduler.ui())
             .doFinally {view.hideLoadingIndicator()}
             .subscribe({
                 if(it.isEmpty())
                     view.showEmptyList()
                 else
                     view.showPosts(it)
-            }, {view.showError(it)})
+            }, {
+                view.showEmptyList()
+                view.showError(it)
+            })
         compositeDisposable.add(disposable)
     }
 

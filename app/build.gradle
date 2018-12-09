@@ -22,6 +22,9 @@ android {
         sourceCompatibility config.java
         targetCompatibility config.java
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
