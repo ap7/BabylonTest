@@ -6,7 +6,7 @@ import com.ghostwan.babylontest.R
 import com.ghostwan.babylontest.data.model.Comment
 import com.ghostwan.babylontest.data.model.Post
 import com.ghostwan.babylontest.data.model.User
-import com.ghostwan.babylontest.data.source.remote.PostsRemoteRepository
+import com.ghostwan.babylontest.data.source.PostsRepository
 import com.ghostwan.babylontest.ui.util.handleError
 import kotlinx.android.synthetic.main.activity_post_detail.*
 import org.koin.android.ext.android.inject
@@ -17,7 +17,7 @@ class PostDetailActivity : AppCompatActivity(), PostDetailContract.View {
         const val EXTRA_POST_ID = "EXTRA_POST_ID"
     }
 
-    private val repository: PostsRemoteRepository by inject()
+    private val repository: PostsRepository by inject()
     private val presenter: PostDetailContract.Presenter by lazy { PostDetailPresenter(repository, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

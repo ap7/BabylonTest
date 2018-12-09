@@ -1,7 +1,7 @@
 ![App Logo](icon.png)
 
 # BabylonTest
-This repository host a test project for the [Babylon Health](https://www.babylonhealth.com/) interview process.
+This repository host a test project for [Babylon Health](https://www.babylonhealth.com/)
 
 ## Statement
 

@@ -37,7 +37,7 @@ class PostDetailPresenterTest {
     fun createMockRepository(): Triple<Post, User, Comment> {
         val mockPost = Post(1, 1, "mocktitle1", "mockbody1")
         val mockUser = User(1, "name1", "username1")
-        val mockComment = Comment(1, 1, "title1", "email1", "body1")
+        val mockComment = Comment(1, 1)
 
         every { repository.getPosts() } returns Single.just(listOf(mockPost))
         every { repository.getPost(1) } returns Single.just(mockPost)
@@ -105,9 +105,6 @@ class PostDetailPresenterTest {
 
         //Test if one comment was retrieved
         capturedComments.size shouldEqualTo 1
-
-        //Test comment data
-        capturedComments[0].name shouldBeEqualTo comment.name
     }
 
     @Test

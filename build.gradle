@@ -35,8 +35,11 @@ buildscript {
         'test' : [
             'junit' : '1.0.0',
             'espresso' : '3.1.0',
-            'mockk' : '1.8.13.kotlin13'
+            'runner' : '1.1.0',
+            'rules' : '1.1.0',
+            'mockk' : '1.8.13.kotlin13',
             'kluent' : '1.44',
+            'kakao' : '1.4.0'
         ]
     ]
 

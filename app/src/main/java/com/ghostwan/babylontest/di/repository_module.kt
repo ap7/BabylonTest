@@ -5,6 +5,5 @@ import com.ghostwan.babylontest.data.source.remote.PostsRemoteRepository
 import org.koin.dsl.module.module
 
 val repositoryModule = module {
-    single { PostsRemoteRepository("http://jsonplaceholder.typicode.com") }
-    single { PostsRepository(get()) }
+    single { PostsRepository(PostsRemoteRepository("http://jsonplaceholder.typicode.com")) }
 }

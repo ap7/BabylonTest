@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ghostwan.babylontest.R
 import com.ghostwan.babylontest.data.model.Post
-import com.ghostwan.babylontest.data.source.remote.PostsRemoteRepository
+import com.ghostwan.babylontest.data.source.PostsRepository
 import com.ghostwan.babylontest.ui.postdetail.PostDetailActivity
 import com.ghostwan.babylontest.ui.util.handleError
 import kotlinx.android.synthetic.main.activity_list_post.*
@@ -17,7 +17,7 @@ import org.koin.android.ext.android.inject
 
 class PostsActivity : AppCompatActivity(), PostsContract.View {
 
-    private val repository: PostsRemoteRepository by inject()
+    private val repository: PostsRepository by inject()
     private val presenter: PostsContract.Presenter by lazy { PostsPresenter(repository, this) }
     private val viewManager: RecyclerView.LayoutManager by lazy { LinearLayoutManager(this) }
     private val viewAdapter: PostAdapter by lazy { PostAdapter(presenter::openPostDetails) }
