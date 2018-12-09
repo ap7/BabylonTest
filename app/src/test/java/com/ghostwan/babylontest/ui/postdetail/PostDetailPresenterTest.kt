@@ -8,10 +8,11 @@ import com.ghostwan.babylontest.ui.util.ImmediateSchedulerProvider
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.reactivex.Single
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldEqualTo
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 
 /**
  * Unit tests for the implementation of {@link PostDetailPresenter}
@@ -68,16 +69,16 @@ class PostDetailPresenterTest {
         //load post information
         presenter.loadPostInfo(1)
 
-        val capturedPost = slot<Post>()
-        val capturedUser = slot<User>()
-        val capturedComments = slot<List<Comment>>()
+        val slotPost = slot<Post>()
+        val slotUser = slot<User>()
+        val slotComments = slot<List<Comment>>()
 
         //Verify if the loading indicator is displayed
         verifyAll {
             view.showLoadingIndicator()
-            view.showPostInfo(capture(capturedPost))
-            view.showUserInfo(capture(capturedUser))
-            view.showComments(capture(capturedComments))
+            view.showPostInfo(capture(slotPost))
+            view.showUserInfo(capture(slotUser))
+            view.showComments(capture(slotComments))
             view.hideLoadingIndicator()
         }
 
@@ -86,23 +87,27 @@ class PostDetailPresenterTest {
             view.showError(any())
         }
 
-        //Test if captured post is coherent
-        assertEquals(capturedPost.captured.id, post.id)
-        assertEquals(capturedPost.captured.title, post.title)
-        assertEquals(capturedPost.captured.body, post.body)
-        assertEquals(capturedPost.captured.user, post.user)
+        val capturedPost = slotPost.captured
+        val capturedUser = slotUser.captured
+        val capturedComments = slotComments.captured
 
-        //Test if one comment was retrieved
-        assertTrue(capturedComments.captured.size == 1)
+        //Test if captured post is coherent
+        capturedPost.id shouldEqualTo post.id
+        capturedPost.title shouldBeEqualTo post.title
+        capturedPost.body shouldBeEqualTo post.body
+        capturedPost.user shouldEqualTo post.user
 
         //Test if captured user ID is the same than post user ID
-        assertEquals(capturedUser.captured.id, post.user)
+        capturedUser.id shouldEqualTo post.user
 
         //Test user data
-        assertEquals(capturedUser.captured.username, user.username)
+        capturedUser.username shouldBeEqualTo user.username
+
+        //Test if one comment was retrieved
+        capturedComments.size shouldEqualTo 1
 
         //Test comment data
-        assertEquals(capturedComments.captured[0].name, comment.name)
+        capturedComments[0].name shouldBeEqualTo comment.name
     }
 
     @Test

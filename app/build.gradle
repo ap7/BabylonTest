@@ -55,6 +55,7 @@ dependencies {
     //Test
     testImplementation "androidx.test.ext:junit:$lib.test.junit"
     testImplementation "io.mockk:mockk:$lib.test.mockk"
+    testImplementation "org.amshove.kluent:kluent-android:$lib.test.kluent"
     androidTestImplementation "androidx.test.espresso:espresso-core:$lib.test.espresso"
     androidTestImplementation "io.mockk:mockk-android:$lib.test.mockk"
 

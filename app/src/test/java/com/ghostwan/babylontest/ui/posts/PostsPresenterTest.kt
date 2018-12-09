@@ -6,10 +6,12 @@ import com.ghostwan.babylontest.ui.util.ImmediateSchedulerProvider
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import io.reactivex.Single
+import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldEqualTo
+import org.amshove.kluent.shouldNotBeEmpty
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.Assert.*
 
 /**
  * Unit tests for the implementation of {@link PostsPresenter}
@@ -74,24 +76,26 @@ class PostsPresenterTest {
         //Load the posts from the repository
         presenter.loadPosts()
 
-        val capturedList = slot<List<Post>>()
+        val slotList = slot<List<Post>>()
 
         //Check if the loading indicator is displayed,
         // if the post is displayed,
         // then if the indicator is hide
         verifySequence {
             view.showLoadingIndicator()
-            view.showPosts(capture(capturedList))
+            view.showPosts(capture(slotList))
             view.hideLoadingIndicator()
         }
 
+        val capturedList =  slotList.captured
+        capturedList.shouldNotBeEmpty()
+
         //Test if capture post is coherent
-        assertTrue(capturedList.captured.isNotEmpty())
-        val capturedPost = capturedList.captured[0]
-        assertEquals(capturedPost.id , mockPost.id)
-        assertEquals(capturedPost.user , mockPost.user)
-        assertEquals(capturedPost.title , mockPost.title)
-        assertEquals(capturedPost.body, mockPost.body)
+        val capturedPost = slotList.captured[0]
+        capturedPost.id shouldEqualTo  mockPost.id
+        capturedPost.user shouldEqualTo  mockPost.user
+        capturedPost.title shouldBeEqualTo mockPost.title
+        capturedPost.body shouldBeEqualTo mockPost.body
     }
 
 
@@ -120,13 +124,13 @@ class PostsPresenterTest {
         //Open post detail
         presenter.openPostDetails(mockPost)
 
-        val capturedPost = slot<Post>()
+        val slotPost = slot<Post>()
 
         verify {
-            view.showPostDetail(capture(capturedPost))
+            view.showPostDetail(capture(slotPost))
         }
         //Test if capture post is coherent
-        assertEquals(capturedPost.captured.id, mockPost.id)
+        slotPost.captured.id shouldEqualTo mockPost.id
     }
 
     @After
