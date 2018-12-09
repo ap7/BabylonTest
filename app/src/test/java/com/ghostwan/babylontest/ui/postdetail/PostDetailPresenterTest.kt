@@ -33,7 +33,7 @@ class PostDetailPresenterTest {
         presenter = PostDetailPresenter(repository, view, ImmediateSchedulerProvider())
     }
 
-    //Set a mock repository
+    // Create a mock repository with one post, one user and one comment
     fun createMockRepository(): Triple<Post, User, Comment> {
         val mockPost = Post(1, 1, "mocktitle1", "mockbody1")
         val mockUser = User(1, "name1", "username1")

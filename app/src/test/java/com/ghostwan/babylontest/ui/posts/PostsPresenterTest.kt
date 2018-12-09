@@ -37,12 +37,13 @@ class PostsPresenterTest {
 
     @Test
     fun `load post list when subscribe`(){
-        //Create an empty list
+        // Create an empty list
         every { repository.getPosts() } returns Single.just(listOf())
 
-        //Load subscribe and load the post
+        // Call subscribe and load the post
         presenter.subscribe()
 
+        // If showLoadingIndicator is called it means that the presenter is loading the post
         verify {
             view.showLoadingIndicator()
         }
@@ -78,19 +79,21 @@ class PostsPresenterTest {
 
         val slotList = slot<List<Post>>()
 
-        //Check if the loading indicator is displayed,
-        // if the post is displayed,
-        // then if the indicator is hide
+        /* Check if the loading indicator is displayed,
+         * if the post is displayed,
+         * then if the indicator is hide */
         verifySequence {
             view.showLoadingIndicator()
             view.showPosts(capture(slotList))
             view.hideLoadingIndicator()
         }
 
+        /* Capture the list of post argument of showPosts gave by loadPosts
+         * and verify the coherency of the data inside the post */
         val capturedList =  slotList.captured
         capturedList.shouldNotBeEmpty()
 
-        //Test if capture post is coherent
+        //Test if post captured is coherent with the mock
         val capturedPost = slotList.captured[0]
         capturedPost.id shouldEqualTo  mockPost.id
         capturedPost.user shouldEqualTo  mockPost.user
@@ -108,9 +111,9 @@ class PostsPresenterTest {
         //Load the posts from the repository
         presenter.loadPosts()
 
-        //Check if the loading indicator is displayed,
-        // if the empty list is displayed and the error message
-        // then if the indicator is hide
+        /* Check if the loading indicator is displayed,
+        * if the empty list indicator is displayed and error message is shown
+        * and finally if the loading indicator is hide */
         verifySequence {
             view.showLoadingIndicator()
             view.showEmptyList()
@@ -129,7 +132,7 @@ class PostsPresenterTest {
         verify {
             view.showPostDetail(capture(slotPost))
         }
-        //Test if capture post is coherent
+        //Test if the post captured is coherent
         slotPost.captured.id shouldEqualTo mockPost.id
     }
 
