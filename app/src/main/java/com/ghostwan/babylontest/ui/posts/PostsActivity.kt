@@ -77,4 +77,9 @@ class PostsActivity : AppCompatActivity(), PostsContract.View {
         handleError(applicationContext, swipeView, throwable)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        postsList.adapter = null
+    }
+
 }

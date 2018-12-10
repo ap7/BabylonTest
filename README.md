@@ -1,6 +1,6 @@
 ![App Logo](icon.png)
 
-# BabylonTest
+# BabylonTest ![Travis CI status](https://travis-ci.org/ghostwan/BabylonTest.svg?branch=master) 
 This repository host a test project for [Babylon Health](https://www.babylonhealth.com/)
 
 ## Statement

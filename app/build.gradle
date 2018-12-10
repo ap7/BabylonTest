@@ -52,6 +52,10 @@ dependencies {
     //Logging - Timber
     implementation "com.jakewharton.timber:timber:$lib.timber"
 
+    //Leak detection - LeakCanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$lib.leakcanary"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$lib.leakcanary"
+
     //Test
     testImplementation "androidx.test.ext:junit:$lib.test.junit"
     testImplementation "io.mockk:mockk:$lib.test.mockk"

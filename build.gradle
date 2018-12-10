@@ -32,6 +32,7 @@ buildscript {
         'rxandroid' : '2.1.0',
         'koin' : '1.0.2',
         'timber' : '4.7.1',
+        'leakcanary' : '1.6.2',
         'test' : [
             'junit' : '1.0.0',
             'espresso' : '3.1.0',

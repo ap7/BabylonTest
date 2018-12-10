@@ -2,6 +2,7 @@ package com.ghostwan.babylontest
 
 import android.app.Application
 import com.ghostwan.babylontest.di.repositoryModule
+import com.squareup.leakcanary.LeakCanary
 import org.koin.android.ext.android.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
@@ -19,6 +20,11 @@ class App : Application() {
             Timber.plant()
         }
         Timber.tag("BabylonTest")
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            return
+        }
+        LeakCanary.install(this);
     }
 }
 
