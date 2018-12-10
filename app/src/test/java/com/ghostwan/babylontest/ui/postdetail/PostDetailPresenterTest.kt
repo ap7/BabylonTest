@@ -64,7 +64,7 @@ class PostDetailPresenterTest {
     @Test
     fun `display post info when post exist`(){
         //Create a mock repository
-        val (post, user, comment) = createMockRepository()
+        val (post, user, _) = createMockRepository()
 
         //load post information
         presenter.loadPostInfo(1)
