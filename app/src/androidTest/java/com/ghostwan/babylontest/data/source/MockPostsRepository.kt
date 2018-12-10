@@ -12,18 +12,18 @@ class MockPostsRepository(var isConnected: Boolean = true) : PostsDataSource {
         var commentCpt = 0
     }
 
-    private val posts = listOf(
+    val posts = listOf(
         Post(1, 1, "post1", "user1 -> post1"),
         Post(2, 1, "post2", "user1 -> post2"),
         Post(3, 2, "post3", "user2 -> post3")
     )
 
-    private val users = listOf(
+    val users = listOf(
         User(1, "user1" , "username1"),
         User(2, "user2" , "username2")
     )
 
-    private val comments = mapOf(
+    val comments = mapOf(
         1 to createListOfComment(1, 3),
         2 to createListOfComment(2, 5),
         3 to createListOfComment(3, 7)
@@ -51,7 +51,7 @@ class MockPostsRepository(var isConnected: Boolean = true) : PostsDataSource {
             return Single.error(UnknownHostException())
 
         return if(id in 1..3)
-            Single.just(comments[id-1])
+            Single.just(comments[id])
         else
             Single.error(PostNotFoundException())
     }
