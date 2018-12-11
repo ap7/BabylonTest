@@ -13,30 +13,30 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class PostsRemoteRepository(baseUrl: String) : PostsDataSource {
 
-    private val retrofit = lazy { Retrofit.Builder()
+    private val retrofit by lazy { Retrofit.Builder()
         .baseUrl(baseUrl)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     }
-    private val postsService = lazy {
-        retrofit.value.create<PostService>(PostService::class.java)
+    private val postsService by lazy {
+        retrofit.create<PostService>(PostService::class.java)
     }
 
     override fun getPosts(): Single<List<Post>> {
-        return postsService.value.getPosts()
+        return postsService.getPosts()
     }
 
     override fun getPost(id: Int): Single<Post> {
-        return postsService.value.getPost(id)
+        return postsService.getPost(id)
     }
 
     override fun getPostComments(id: Int): Single<List<Comment>> {
-        return postsService.value.getCommentsForPost(id)
+        return postsService.getCommentsForPost(id)
     }
 
     override fun getUser(id: Int): Single<User> {
-        return postsService.value.getUser(id)
+        return postsService.getUser(id)
     }
 
 }
