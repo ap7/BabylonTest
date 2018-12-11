@@ -5,10 +5,10 @@ sudo: false
 env:
   global:
     - ANDROID_API_LEVEL=28
-    - ANDROID_EMULATOR_LEVEL=23
+    - ANDROID_EMULATOR_LEVEL=21
     - ANDROID_BUILD_TOOLS_VERSION=28.0.3
     - ADB_INSTALL_TIMEOUT=20
-    - ANDROID_ABI=x86
+    - ANDROID_ABI=armeabi-v7a
     - ANDROID_TAG=google_apis
     - QEMU_AUDIO_DRV=none
 
@@ -40,13 +40,13 @@ cache:
 script:
   - ./gradlew test assembleRelease
 # [WIP] Run emulator for instrumented test (look for proper emulator)
-#  - android list targets
-#  - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
-#  - emulator -avd test -no-window &
-#  - mkdir -p build/reports
-#  - ./gradlew assembleDebugAndroidTest -PdisablePreDex --continue --stacktrace
-#  - android-wait-for-emulator
-#  - ./gradlew connectedDebugAndroidTest -PdisablePreDex --continue --stacktrace
+  - android list targets
+  - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR_LEVEL --abi $ANDROID_ABI --tag $ANDROID_TAG
+  - emulator -avd test -no-window &
+  - mkdir -p build/reports
+  - ./gradlew assembleDebugAndroidTest -PdisablePreDex --continue --stacktrace
+  - android-wait-for-emulator
+  - ./gradlew connectedDebugAndroidTest -PdisablePreDex --continue --stacktrace
 
 after_failure:
   - cat $TRAVIS_BUILD_DIR/app/build/reports/lint-results.xml
